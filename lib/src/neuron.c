@@ -6,12 +6,19 @@ double activate_function(double sum)
 }
 
 
-double perform(neuron_t *neuron)
+double perform(neuron_t *neuron, size_t len)
 {
 
-    size_t lenght_i = sizeof(neuron->input) / sizeof(neuron->input[0]);
-    size_t lenght_w = sizeof(neuron->weight) / sizeof(neuron->weight[0]);
+    double sum = 0;
 
-    printf("%d", lenght_i);
-    
+    for (size_t i = 0; i < len; i++)
+    {
+        sum += (neuron->input[i] * neuron->weight[i]);
+    }
+
+
+    double acv = activate_function(sum);
+
+    return acv + neuron->bias;
+
 }

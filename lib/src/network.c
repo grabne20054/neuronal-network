@@ -5,8 +5,35 @@
 
 void feed_forward(network_t *network)
 {
-    // poc
-    perform(network->neurons[0]);
+    // poc --> needs to be done with n neurons --> how to connect them?
+    double res = perform(network->neurons[0], 1);
+
+    network->neurons[0]->output[0] = res;
+
+    printf("%f\n", res);
 
 }
 
+void propagate_back(network_t *network)
+{
+    double delta = calc_error(network->neurons[0]->input[0], network->neurons[0]->output[0]);
+
+    double tmp_w = network->neurons[0]->weight[0];
+
+    network->neurons[0]->weight[0] = tmp_w + network->learning_rate * delta * network->neurons[0]->input[0];
+
+
+    double tmp_bias = network->neurons[0]->bias;
+
+    network->neurons[0]->bias = tmp_bias + network->learning_rate * delta;
+}
+
+
+double calc_error(double target, double res_calc)
+{
+
+    double err = target - res_calc;
+
+    return err * res_calc * (1-res_calc);
+
+}

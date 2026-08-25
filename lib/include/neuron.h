@@ -17,4 +17,4 @@ typedef struct neuron
 
 double activate_function(double sum);
 
-double perform(neuron_t *neuron);
+double perform(neuron_t *neuron, size_t len);

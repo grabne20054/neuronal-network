@@ -17,4 +17,4 @@ void propagate_back(network_t *network);
 
 double calc_error(double res_calc, double target);
 
-void update_weights(network_t *network);
+void update_weights(network_t *network, double delta);

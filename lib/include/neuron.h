@@ -9,9 +9,12 @@ typedef struct neuron
     double *input;
 
     double *weight;
-    int bias;
+    double bias;
 
     double *output;
+
+    size_t layer;
+
 
 } neuron_t;
 

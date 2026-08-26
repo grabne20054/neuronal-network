@@ -10,7 +10,7 @@ int main(void)
     neuron->weight = malloc(sizeof(double));
     neuron->output = malloc(sizeof(double));
 
-    neuron->input[0] = 2.0;
+    neuron->input[0] = 0.0;
     neuron->weight[0] = 0.2;
 
     network_t *network = malloc(sizeof(network_t));
@@ -18,9 +18,9 @@ int main(void)
     network->neurons = malloc(sizeof(neuron_t *));
 
     network->neurons[0] = neuron;
-    network->epoch = 2000000000;
+    network->epoch = 200000000;
 
-    network->learning_rate = 1.2;
+    network->learning_rate = 0.2;
 
     for (size_t i = 0; i < network->epoch; i++)
     {

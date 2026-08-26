@@ -3,6 +3,13 @@
 double activate_function(double sum)
 {
     return (1.0 / (1.0 + exp(-sum)));
+
+    /*if (sum > 0)
+    {
+        return 1;
+    }
+    return 0;*/
+    
 }
 
 
@@ -15,7 +22,6 @@ double perform(neuron_t *neuron, size_t len)
     {
         sum += (neuron->input[i] * neuron->weight[i]);
     }
-
 
     double acv = activate_function(sum);
 

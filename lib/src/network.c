@@ -36,6 +36,24 @@ void update_weights(network_t *network, double delta)
 
     double tmp_bias = network->neurons[0]->bias;
 
-    network->neurons[0]->bias = tmp_bias + network->learning_rate * delta;
+    network->neurons[0]->bias = tmp_bias - network->learning_rate * delta;
 
 }
+
+network_t *init_network(size_t layers, size_t neurons_per_layer, double **inputs)
+{
+
+    network_t *network = malloc(sizeof(network_t));
+
+    for (size_t i = 0; i < layers; i++)
+    {
+        for (size_t j = 0; j < neurons_per_layer; j++)
+        {
+
+        }
+        
+    }
+    
+
+}
+

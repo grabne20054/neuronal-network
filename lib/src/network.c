@@ -1,14 +1,14 @@
-#pragma once
-
 #include "../include/network.h"
 #include "../include/neuron.h"
 
 void feed_forward(network_t *network)
 {
     // poc --> needs to be done with n neurons --> how to connect them?
+    // seggy here mate
     double res = perform(network->neurons[0], 1);
 
     network->neurons[0]->output[0] = res;
+
 }
 
 void propagate_back(network_t *network)
@@ -40,20 +40,35 @@ void update_weights(network_t *network, double delta)
 
 }
 
-network_t *init_network(size_t layers, size_t neurons_per_layer, double **inputs)
+network_t *init_network(size_t layers, size_t neurons_per_layer, double *inputs, size_t input_len)
 {
-
     network_t *network = malloc(sizeof(network_t));
+
+    network->neurons = NULL;
+    network->neurons_length = 0;
+    network->layers = layers;
 
     for (size_t i = 0; i < layers; i++)
     {
         for (size_t j = 0; j < neurons_per_layer; j++)
         {
-
+            neuron_t *neuron = init_neuron(inputs, input_len, i);
+            
+            add_to_network(network, neuron);
         }
-        
     }
-    
+
+    return network;
+}
+
+void add_to_network(network_t *network, neuron_t *neuron)
+{
+    network->neurons = realloc(network->neurons, (network->neurons_length + 1) * sizeof(*network->neurons));
+    network->neurons[network->neurons_length++] = neuron;
 
 }
 
+void connect_neurons(network_t *network)
+{
+
+}

@@ -8,8 +8,11 @@ neuron.o: lib/src/neuron.c lib/include/neuron.h
 network.o: lib/src/network.c lib/include/neuron.h
 	$(CC) $(CFLAGS) -c lib/src/network.c -o build/network.o
 
-build: neuron.o network.o
-	$(CC) $(CFLAGS) lib/src/main.c build/neuron.o build/network.o -o build/main.o $(LDFLAGS)
+layer.o: lib/src/layer.c lib/include/layer.h
+	$(CC) $(CFLAGS) -c lib/src/layer.c -o build/layer.o
+
+build: neuron.o network.o layer.o
+	$(CC) $(CFLAGS) lib/src/main.c build/neuron.o build/network.o build/layer.o -o build/main.o $(LDFLAGS)
 
 clean:
 	rm -r ./build/*

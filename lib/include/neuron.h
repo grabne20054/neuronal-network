@@ -6,31 +6,27 @@
 #include <string.h>
 
 
-typedef struct neuron
+typedef struct
 {
     double *input;
+    size_t input_len;
 
     double *weight;
     double bias;
 
     double *output;
 
-    size_t layer;
-
-    struct neuron **next_layer_neurons;
-    size_t next_layer_neurons_length;
-
 
 } neuron_t;
 
 double activate_function(double sum);
 
-double perform(neuron_t *neuron, size_t len);
+void perform(neuron_t *neuron, size_t len);
 
-neuron_t *init_neuron(double *target, size_t target_len, size_t layer);
+neuron_t *init_neuron(size_t target_len);
+
+neuron_t *init_io_neuron(double *target, size_t target_len);
 
 double rand_double();
 
 void free_neuron(neuron_t *neuron);
-
-void connect(neuron_t *parent, neuron_t *child);

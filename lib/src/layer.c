@@ -16,4 +16,5 @@ layer_t *init_layer(size_t neurons_len)
 
     layer->io = false;
     
+    return layer;
 }

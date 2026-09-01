@@ -110,7 +110,7 @@ void start_network(network_t *network)
 {
     for (size_t i = 0; i < network->epoch; i++)
     {
-        printf("EPOCH: %d\n", i);
+        printf("EPOCH: %zu\n", i);
         feed_forward(network);
         propagate_back(network);
 

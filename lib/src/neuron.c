@@ -17,7 +17,8 @@ void perform(neuron_t *neuron, size_t len)
 {
     if (neuron->weight == NULL) // indicate neuron is io
     {
-        neuron->output = neuron->input;
+        //neuron->output = neuron->input;
+        printf("IO NEURON EXIT\n");
         return;
     }
 
@@ -28,46 +29,43 @@ void perform(neuron_t *neuron, size_t len)
         sum += (neuron->input[i] * neuron->weight[i]);
     }
 
+    sum += neuron->bias;
+
     double acv = activate_function(sum);
 
-    
-    neuron->output[0] = acv + neuron->bias;
-    printf("output of feed forward: %f\n", neuron->output[0]);
+    neuron->output = acv;
 
 }
 
 
-neuron_t *init_io_neuron(double *target, size_t target_len)
+neuron_t *init_io_neuron(size_t features_per_sample)
 {
     neuron_t *neuron = malloc(sizeof(neuron_t));
-    neuron->input = malloc(sizeof(double) * target_len);
+    neuron->input = malloc(sizeof(double) * features_per_sample);
     neuron->weight = NULL;
-    neuron->output = malloc(sizeof(double) * target_len);
+    neuron->output = 0;
 
-    neuron->input_len = target_len;
-    
-    memcpy(neuron->input, target, target_len * sizeof(double));
+    neuron->input_len = features_per_sample;
     
     return neuron;
 }
 
-neuron_t *init_neuron(size_t target_len)
+neuron_t *init_neuron(size_t features_per_sample)
 {
     neuron_t *neuron = malloc(sizeof(neuron_t));
-    neuron->input = malloc(sizeof(double) * target_len);
-    neuron->weight = malloc(sizeof(double) * target_len);
-    neuron->output = malloc(sizeof(double) * target_len);
+    neuron->input = malloc(sizeof(double) * features_per_sample);
+    neuron->weight = malloc(sizeof(double) * features_per_sample);
+    neuron->output = 0;
 
-    neuron->input_len = target_len;
+    neuron->input_len = features_per_sample;
 
     neuron->bias = rand_double();
 
-    for (size_t i = 0; i < target_len; i++)
+    for (size_t i = 0; i < features_per_sample; i++)
     {
         neuron->weight[i] = rand_double();
     }
     
-
     return neuron;
 }
 
@@ -82,7 +80,6 @@ void free_neuron(neuron_t *neuron)
 {
     if (!neuron) {return;}
     
-    free(neuron->output);
     free(neuron->weight);
     free(neuron->input);
     free(neuron);

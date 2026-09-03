@@ -14,7 +14,7 @@ typedef struct
     double *weight;
     double bias;
 
-    double *output;
+    double output;
 
 
 } neuron_t;
@@ -25,7 +25,7 @@ void perform(neuron_t *neuron, size_t len);
 
 neuron_t *init_neuron(size_t target_len);
 
-neuron_t *init_io_neuron(double *target, size_t target_len);
+neuron_t *init_io_neuron(size_t target_len);
 
 double rand_double();
 

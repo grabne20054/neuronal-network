@@ -15,6 +15,7 @@ typedef struct
     double bias;
 
     double output;
+    double delta;
 
 
 } neuron_t;

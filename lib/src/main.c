@@ -25,13 +25,10 @@ int main(void)
     // todo n hidden layers does not work (more epochs needed?)
 
     // curr neuron_per_hidden_layer must == features_per_sample
-
-    network_t *network = init_network(1, 3, samples, sample_len, features_per_sample, 20000, 0.01, y);
+    network_t *network = init_network(1, samples, sample_len, features_per_sample, 20000, 0.01, y);
 
     time_t start_time = time(NULL);
-
     start_network(network);
-
     time_t end_time = time(NULL);
 
     printf("RAN for %f minutes\n", difftime(end_time, start_time)/60);

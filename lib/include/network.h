@@ -33,6 +33,6 @@ void update_weights(neuron_t *neuron, double learning_rate);
 
 void add_to_network(network_t *network, layer_t *layer);
 
-network_t *init_network(size_t hidden_layers, size_t neurons_per_hidden_layer, double **samples, size_t sample_len, size_t features_per_sample, size_t epoch, double learning_rate, int* targets);
+network_t *init_network(size_t hidden_layers, double **samples, size_t sample_len, size_t features_per_sample, size_t epoch, double learning_rate, int* targets);
 
 void start_network(network_t *network);

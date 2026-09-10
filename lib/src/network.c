@@ -74,10 +74,14 @@ void compute_delta(network_t *network, double target)
         {
             if (i == network->layers_length-1)
             {
+                //printf("delta ib=%f output=%f\n",current->neurons_list[j]->delta, current->neurons_list[j]->output);
                 current->neurons_list[j]->delta = calc_error(target, current->neurons_list[j]->output);
+                //printf("delta i=%f\n",current->neurons_list[j]->delta);
             }
             else
             {
+                // err calculation for hidden layers --> calculate the loss of the next layer neurons
+                // current neuron has effect on all next layer neurons
                 layer_t *next = network->layers[i + 1];
                 double sum = 0.0;
 
@@ -86,11 +90,15 @@ void compute_delta(network_t *network, double target)
                     neuron_t *next_neuron = next->neurons_list[k];
 
                     sum += next_neuron->delta * next_neuron->weight[j];
+                    //printf("delta before b i=%zu j=%zu sum=%f, delta=%f weight=%f\n",i,j, sum, current->neurons_list[j]->delta, next_neuron->weight[j]);
+
                 }
+
+                //printf("delta before i=%zu j=%zu sum=%f, delta=%f\n",i,j, sum, current->neurons_list[j]->delta);
 
                 current->neurons_list[j]->delta = current->neurons_list[j]->output * (1.0 - current->neurons_list[j]->output) * sum;
 
-                printf("hidden[%zu] output=%f sum=%f delta=%f\n",j, current->neurons_list[j]->output, sum, current->neurons_list[j]->delta);
+                //printf("hidden[%zu] output=%f sum=%f delta=%f\n",j, current->neurons_list[j]->output, sum, current->neurons_list[j]->delta);
 
             }
         }
@@ -116,7 +124,7 @@ void update_weights(neuron_t *neuron, double learning_rate)
     neuron->bias += learning_rate * neuron->delta;
 }
 
-network_t *init_network(size_t hidden_layers, size_t neurons_per_hidden_layer, double **samples, size_t sample_len, size_t features_per_sample, size_t epoch, double learning_rate, int* targets)
+network_t *init_network(size_t hidden_layers, double **samples, size_t sample_len, size_t features_per_sample, size_t epoch, double learning_rate, int* targets)
 {
     network_t *network = malloc(sizeof(network_t));
     network->layers = malloc(sizeof(layer_t *) * (hidden_layers+2));
@@ -154,10 +162,10 @@ network_t *init_network(size_t hidden_layers, size_t neurons_per_hidden_layer, d
 
     for (size_t i = 1; i < hidden_layers + 1; i++)
     {
-        layer_t *hidden_layer = init_layer(neurons_per_hidden_layer);
+        layer_t *hidden_layer = init_layer(features_per_sample);
         network->layers[i] = hidden_layer;
 
-        for (size_t j = 0; j < neurons_per_hidden_layer; j++)
+        for (size_t j = 0; j < features_per_sample; j++)
         {
             printf("HIDDEN NEURON INIT\n");
             neuron_t *neuron = init_neuron(features_per_sample);

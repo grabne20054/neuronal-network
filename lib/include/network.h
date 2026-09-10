@@ -17,16 +17,19 @@ typedef struct
 
     int* targets;
 
+    size_t features_per_sample;
+
 } network_t;
 
 
 void feed_forward(network_t *network, double *sample);
 
 void propagate_back(network_t *network, double target);
+void compute_delta(network_t *network, double target);
 
 double calc_error(double target, double output);
 
-void update_weights(double delta, neuron_t *neuron, double learning_rate);
+void update_weights(neuron_t *neuron, double learning_rate);
 
 void add_to_network(network_t *network, layer_t *layer);
 

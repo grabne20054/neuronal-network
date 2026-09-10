@@ -4,11 +4,11 @@ double activate_function(double sum)
 {
     return (1.0 / (1.0 + exp(-sum)));
 
-    /*if (sum > 0)
+    if (sum > 0)
     {
         return 1;
     }
-    return 0;*/
+    return 0;
     
 }
 
@@ -34,6 +34,7 @@ void perform(neuron_t *neuron, size_t len)
     double acv = activate_function(sum);
 
     neuron->output = acv;
+    printf("neuron output: %f\n", neuron->output);
 
 }
 
@@ -59,11 +60,12 @@ neuron_t *init_neuron(size_t features_per_sample)
 
     neuron->input_len = features_per_sample;
 
-    neuron->bias = rand_double();
+    neuron->bias = 0.0;
 
     for (size_t i = 0; i < features_per_sample; i++)
     {
         neuron->weight[i] = rand_double();
+        printf("WEIGHT: %f\n", neuron->weight[i]);
     }
     
     return neuron;
@@ -72,7 +74,7 @@ neuron_t *init_neuron(size_t features_per_sample)
 
 double rand_double()
 {
-    return (double)rand() / (double)RAND_MAX;
+    return (((double)rand() / RAND_MAX) * 2.0 - 1.0) * 0.1;
 }
 
 

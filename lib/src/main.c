@@ -9,15 +9,8 @@ int main(void)
 {
 
     // INPUT LAYER 0 weights
-
     size_t sample_len = 100;
     size_t features_per_sample = 3;
-
-    double init[3][3] = {
-        {0.1, 0.5, 0.7},
-        {0.3, 0.4, 0.6},
-        {0.7, 0.4, 0.1}
-    };
 
     double **samples = malloc(sample_len * sizeof(*samples));
 
@@ -29,7 +22,11 @@ int main(void)
         }
     }
 
-    network_t *network = init_network(2, 3, samples, sample_len, features_per_sample, 1e9, 0.05, y);
+    // todo n hidden layers does not work (more epochs needed?)
+
+    // curr neuron_per_hidden_layer must == features_per_sample
+
+    network_t *network = init_network(1, 3, samples, sample_len, features_per_sample, 20000, 0.01, y);
 
     time_t start_time = time(NULL);
 

@@ -36,19 +36,16 @@ void feed_forward(network_t *network, double *sample)
                 next->neurons_list[next_n]->input = current->output;
             }
         }
-
-        printf("I: %zu\n", i);
     }
 }
 
 void propagate_back(network_t *network, double target)
 {
+    compute_delta(network, target);
+
     for (size_t i = network->layers_length - 1; i > 0; i--)
     {
         layer_t *current = network->layers[i];
-
-        printf("I: %zu\n", i);
-
         /* Output layer */
         if (i == network->layers_length - 1)
         {
@@ -58,8 +55,6 @@ void propagate_back(network_t *network, double target)
         /* Hidden layers */
         else
         {
-            layer_t *next = network->layers[i + 1];
-
             for (size_t j = 0; j < current->neurons_list_lenght; j++)
             {
                 neuron_t *curr = current->neurons_list[j];
@@ -74,8 +69,6 @@ void compute_delta(network_t *network, double target)
     for (size_t i = network->layers_length - 1; i > 0; i--)
     {
         layer_t *current = network->layers[i];
-
-        printf("I: %zu\n", i);
 
         for (size_t j = 0; j < current->neurons_list_lenght; j++)
         {
@@ -118,7 +111,6 @@ void update_weights(neuron_t *neuron, double learning_rate)
     for (size_t i = 0; i < neuron->input_len; i++)
     {
         neuron->weight[i] += learning_rate * neuron->delta * neuron->input[i];
-        printf("input[%zu]=%f\n", i, neuron->input[i]);
     }
 
     neuron->bias += learning_rate * neuron->delta;
@@ -185,7 +177,6 @@ void start_network(network_t *network)
         for (size_t j = 0; j < network->samples_len; j++)
         {
             feed_forward(network, network->samples[j]);
-            compute_delta(network, network->targets[j]);
             propagate_back(network, network->targets[j]);
 
             loss += 0.5 * (network->layers[network->layers_length-1]->neurons_list[0]->output - network->targets[j]) * (network->layers[network->layers_length-1]->neurons_list[0]->output - network->targets[j]);

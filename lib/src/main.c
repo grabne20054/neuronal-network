@@ -5,8 +5,24 @@
 
 #include <time.h>
 
-int main(void)
+typedef struct
 {
+    size_t n_hidden_layers;
+    size_t epochs;
+    double learning_rate;
+
+    char *filename;
+
+    //todo: add features and targets?
+} cliargs_t;
+
+void handle_args(int argc, char *argv[], cliargs_t *args);
+
+int main(int argc, char *argv[])
+{
+
+    cliargs_t args;
+    handle_args(argc, argv, &args);
 
     // INPUT LAYER 0 weights
     size_t sample_len = 100;
@@ -25,7 +41,7 @@ int main(void)
     // todo n hidden layers does not work (more epochs needed?)
 
     // curr neuron_per_hidden_layer must == features_per_sample
-    network_t *network = init_network(1, samples, sample_len, features_per_sample, 20000, 0.01, y);
+    network_t *network = init_network(args.n_hidden_layers, samples, sample_len, features_per_sample, args.epochs, args.learning_rate, y);
 
     time_t start_time = time(NULL);
     start_network(network);
@@ -33,4 +49,20 @@ int main(void)
 
     printf("RAN for %f minutes\n", difftime(end_time, start_time)/60);
 
+    //free_network(network);
+
+}
+
+void handle_args(int argc, char *argv[], cliargs_t *args)
+{
+    if (argc < 5)
+    {
+        printf("Usage: %s <n_hidden_layers> <epochs> <learning_rate> <filename>\n", argv[0]);
+        exit(1);
+    }
+
+    args->n_hidden_layers = atoi(argv[1]);
+    args->epochs = atoi(argv[2]);
+    args->learning_rate = atof(argv[3]);
+    args->filename = argv[4];
 }

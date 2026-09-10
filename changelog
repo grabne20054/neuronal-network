@@ -1,0 +1,42 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## [1.0] - 2026-09-10
+
+### Added
+
+* Basic from scratch neural network implementation in C.
+* Configurable number of hidden layers.
+* Configurable number of epochs.
+* Configurable samples and input features (no limitation).
+* Input and output layer initialization.
+* Feed-forward propagation.
+* Sigmoid activation function.
+* Backpropagation algorithm.
+* Delta/error calculation for output and hidden layers.
+* Weight and bias updates using a configurable learning rate.
+* Training over multiple epochs.
+* Mean/squared error loss calculation.
+* Support for multiple training samples.
+* Console output for sample predictions, targets, and epoch loss.
+
+### Network Architecture
+
+* Input layer with configurable number of features.
+* One or more hidden layers.
+* Single-neuron output layer.
+* Fully connected neuron layers.
+
+### Training
+
+* Forward propagation for predictions.
+* Error calculation against target values.
+* Backpropagation through hidden layers.
+* Gradient-based weight and bias updates.
+* Configurable learning rate and number of epochs.
+
+## [1.0.1] - 2026-09-10
+
+### Added
+* Command-line argument parsing for hidden layers, epochs, learning rate, and filename.

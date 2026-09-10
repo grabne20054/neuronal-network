@@ -17,6 +17,6 @@ build: neuron.o network.o layer.o
 clean:
 	rm -r ./build/*
 
-run: build
-	build/main.o
+run: build build/main.o
+	build/main.o $(hlayers) $(e) $(lr) $(f)
 	

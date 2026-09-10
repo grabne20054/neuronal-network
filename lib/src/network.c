@@ -196,3 +196,26 @@ void start_network(network_t *network)
     }
     
 }
+
+void free_network(network_t *network)
+{
+    for (size_t i = 0; i < network->layers_length; i++)
+    {
+        layer_t *layer = network->layers[i];
+
+        for (size_t j = 0; j < layer->neurons_list_lenght; j++)
+        {
+            neuron_t *neuron = layer->neurons_list[j];
+            free(neuron->input);
+            free(neuron->weight);
+            free(neuron);
+        }
+
+        free(layer->neurons_list);
+        free(layer->output);
+        free(layer);
+    }
+
+    free(network->layers);
+    free(network);
+}

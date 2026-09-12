@@ -34,7 +34,7 @@ void perform(neuron_t *neuron, size_t len)
     double acv = activate_function(sum);
 
     neuron->output = acv;
-    printf("neuron output: %f\n", neuron->output);
+    //printf("neuron output: %f\n", neuron->output);
 
 }
 

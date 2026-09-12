@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
     network_t *network = init_network(args.n_hidden_layers, samples, sample_len, features_per_sample, args.epochs, args.learning_rate, y);
 
     time_t start_time = time(NULL);
-    start_network(network);
+    train_network(network);
     time_t end_time = time(NULL);
 
     printf("RAN for %f minutes\n", difftime(end_time, start_time)/60);
@@ -57,7 +57,7 @@ void handle_args(int argc, char *argv[], cliargs_t *args)
 {
     if (argc < 5)
     {
-        printf("Usage: %s <n_hidden_layers> <epochs> <learning_rate> <filename>\n", argv[0]);
+        printf("Usage: %s <hlayers> <e> <lr> <f>\n", argv[0]);
         exit(1);
     }
 

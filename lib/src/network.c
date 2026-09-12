@@ -176,7 +176,7 @@ network_t *init_network(size_t hidden_layers, double **samples, size_t sample_le
     return network;
 }
 
-void start_network(network_t *network)
+void train_network(network_t *network)
 {
     for (size_t i = 0; i < network->epoch; i++)
     {

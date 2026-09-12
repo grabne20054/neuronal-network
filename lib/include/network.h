@@ -35,6 +35,6 @@ void add_to_network(network_t *network, layer_t *layer);
 
 network_t *init_network(size_t hidden_layers, double **samples, size_t sample_len, size_t features_per_sample, size_t epoch, double learning_rate, int* targets);
 
-void start_network(network_t *network);
+void train_network(network_t *network);
 
 void free_network(network_t *network);

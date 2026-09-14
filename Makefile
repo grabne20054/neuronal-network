@@ -18,5 +18,5 @@ clean:
 	rm -r ./build/*
 
 run: build build/main.o
-	build/main.o $(hlayers) $(e) $(lr) $(f)
+	build/main.o $(hlayers) $(e) $(lr) $(train) $(f)
 	

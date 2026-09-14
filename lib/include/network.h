@@ -1,7 +1,11 @@
 #include <stdlib.h>
 #include <stdbool.h>
+#include <time.h>
 #include "neuron.h"
 #include "layer.h"
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 typedef struct
 {
@@ -38,3 +42,9 @@ network_t *init_network(size_t hidden_layers, double **samples, size_t sample_le
 void train_network(network_t *network);
 
 void free_network(network_t *network);
+
+char *save_network(network_t *network);
+
+network_t *load_network(const char *filename);
+
+int predict(network_t *network, double *sample);

@@ -10,6 +10,7 @@ typedef struct
     size_t n_hidden_layers;
     size_t epochs;
     double learning_rate;
+    bool train; // if true, train the network, if false, load the network from file
 
     char *filename;
 
@@ -38,31 +39,57 @@ int main(int argc, char *argv[])
         }
     }
 
-    // todo n hidden layers does not work (more epochs needed?)
+    char *filename = args.filename;
 
-    // curr neuron_per_hidden_layer must == features_per_sample
-    network_t *network = init_network(args.n_hidden_layers, samples, sample_len, features_per_sample, args.epochs, args.learning_rate, y);
+    if (args.train)
+    {
+        network_t *network = init_network(args.n_hidden_layers, samples, sample_len, features_per_sample, args.epochs, args.learning_rate, y);
 
-    time_t start_time = time(NULL);
-    train_network(network);
-    time_t end_time = time(NULL);
+        time_t start_time = time(NULL);
+        train_network(network);
+        time_t end_time = time(NULL);
 
-    printf("RAN for %f minutes\n", difftime(end_time, start_time)/60);
+        printf("RAN for %f minutes\n", difftime(end_time, start_time)/60);
 
-    //free_network(network);
+
+        // save trained network
+        filename = save_network(network);
+        free_network(network);
+    }
+    else
+    {
+        printf("Loading network from file...\n");
+    }
+
+    
+    network_t *loaded_network = load_network(filename);
+
+    if (loaded_network)
+    {
+        printf("Network loaded successfully!\n");
+    }
+    else
+    {
+        printf("Failed to load network.\n");
+        return 1;
+    }
+
+    double output = predict(loaded_network, prediction);
+    printf("Prediction for sample [1.0, 0.0, 0.0]: %f\n", output);
 
 }
 
 void handle_args(int argc, char *argv[], cliargs_t *args)
 {
-    if (argc < 5)
+    if (argc < 6)
     {
-        printf("Usage: %s <hlayers> <e> <lr> <f>\n", argv[0]);
+        printf("Usage: %s <hlayers> <e> <lr> <train> <filename>\n", argv[0]);
         exit(1);
     }
 
     args->n_hidden_layers = atoi(argv[1]);
     args->epochs = atoi(argv[2]);
     args->learning_rate = atof(argv[3]);
-    args->filename = argv[4];
+    args->train = atoi(argv[4]);
+    args->filename = argv[5];
 }

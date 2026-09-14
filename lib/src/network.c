@@ -141,7 +141,7 @@ network_t *init_network(size_t hidden_layers, double **samples, size_t sample_le
 
     //io layers init
     layer_t *i_layer = init_layer(features_per_sample);
-    i_layer->io = true;
+    i_layer->i = true;
     network->layers[0] = i_layer;
 
     for (size_t i = 0; i < features_per_sample; i++)
@@ -155,7 +155,7 @@ network_t *init_network(size_t hidden_layers, double **samples, size_t sample_le
     // o layer 1 neuron, 1 output
     printf("O NEURON INIT\n");
     layer_t *o_layer = init_layer(1);
-    o_layer->io = true;
+    o_layer->o = true;
     network->layers[network->layers_length-1] = o_layer;
     neuron_t *o_neuron = init_neuron(features_per_sample);
     network->layers[network->layers_length-1]->neurons_list[0] = o_neuron;
@@ -206,7 +206,7 @@ void free_network(network_t *network)
         for (size_t j = 0; j < layer->neurons_list_lenght; j++)
         {
             neuron_t *neuron = layer->neurons_list[j];
-            free(neuron->input);
+            
             free(neuron->weight);
             free(neuron);
         }
@@ -218,4 +218,136 @@ void free_network(network_t *network)
 
     free(network->layers);
     free(network);
+}
+
+
+
+char *save_network(network_t *network)
+{
+    struct stat st = {0};
+
+    if (stat("networks", &st) == -1) {
+        mkdir("networks", 0700);
+    }
+
+    char *path = "networks/network-";
+
+    char date_buff[70];
+
+    struct tm date_tm;
+
+    time_t now = time(NULL);
+    localtime_r(&now, &date_tm);
+
+    strftime(date_buff, sizeof(date_buff), "%Y-%m-%d-%H:%M", &date_tm);
+
+
+    char *con = malloc(strlen(path) + strlen(date_buff) + 1);
+    memcpy(con, path, strlen(path));
+    memcpy(con+strlen(path), date_buff, strlen(date_buff));
+
+    FILE *file = fopen(con, "wb");
+    if (file == NULL)
+    {
+        perror("COULD NOT OPEN FILE");
+        return "";
+    }
+
+    fwrite(&network->features_per_sample, sizeof(network->features_per_sample), 1, file);
+    fwrite(&network->samples_len, sizeof(network->samples_len), 1, file);
+    fwrite(&network->layers_length, sizeof(network->layers_length), 1, file);
+
+    // save layers
+    for (size_t i = 0; i < network->layers_length; i++)
+    {
+        save_layer(network->layers[i], file, network->features_per_sample);
+    }
+
+    // save params
+    fwrite(&network->epoch, sizeof(network->epoch), 1, file); //
+    fwrite(&network->learning_rate, sizeof(network->learning_rate), 1, file); //
+
+    // save samples, targets
+
+    fwrite(network->targets, sizeof(*network->targets), network->samples_len, file);
+
+    for (size_t i = 0; i < network->samples_len; i++)
+    {
+        fwrite(network->samples[i], sizeof(*network->samples[i]), network->features_per_sample, file);
+    }
+    fclose(file);
+
+    printf("%s saved successfully!\n", con);
+
+    return con;
+}
+
+
+network_t *load_network(const char *filename)
+{
+    FILE *file = fopen(filename, "rb");
+
+    if (file == NULL)
+    {
+        perror("COULD NOT READ FILE");
+        return NULL;
+    }
+
+    network_t *network = malloc(sizeof(network_t));
+
+    fread(&network->features_per_sample, sizeof(size_t), 1, file);
+    printf("network->features_per_sample %zu\n", network->features_per_sample);
+
+    fread(&network->samples_len, sizeof(size_t), 1, file);
+    printf("network->samples_len %zu\n", network->samples_len);
+
+    fread(&network->layers_length, sizeof(size_t), 1, file);
+    printf("network->layers_length %zu\n", network->layers_length);
+
+    network->layers = malloc(sizeof(layer_t) * network->layers_length);
+
+    for (size_t i = 0; i < network->layers_length; i++)
+    {
+        layer_t *layer = malloc(sizeof(layer_t));
+        load_layer(layer, file, network->features_per_sample);
+        network->layers[i] = layer;
+
+    }
+    
+    fread(&network->epoch, sizeof(size_t), 1, file);
+    printf("network->epoch %zu\n", network->epoch);
+
+    fread(&network->learning_rate, sizeof(double), 1, file);
+    printf("network->learning_rate %f\n", network->learning_rate);
+
+    
+    network->targets = malloc(sizeof(double) * network->samples_len);
+    fread(network->targets, sizeof(*network->targets), network->samples_len, file);
+    printf("network->targets %d\n", network->targets[5]);
+
+    network->samples = malloc(sizeof(*network->samples) * network->samples_len);
+    for (size_t i = 0; i < network->samples_len; i++)
+    {
+        network->samples[i] = malloc(sizeof(double) * network->features_per_sample);
+        fread(network->samples[i], sizeof(*network->samples[i]), network->features_per_sample, file);
+
+        printf("network->samples[i][0]: %f\n", network->samples[i][0]);
+    }
+
+    fclose(file);
+
+    printf("LOAD SUCCESS\n");
+
+    return network;
+
+}
+
+int predict(network_t *network, double *sample)
+{
+    feed_forward(network, sample);
+    double output = network->layers[network->layers_length-1]->neurons_list[0]->output;
+
+    printf("Prediction output: %f\n", output);
+
+    return (output >= 0.5) ? 1 : 0;
 }

@@ -31,3 +31,7 @@ neuron_t *init_io_neuron(size_t target_len);
 double rand_double();
 
 void free_neuron(neuron_t *neuron);
+
+void save_neuron(neuron_t *neuron, FILE *file);
+
+void load_neuron(neuron_t *neuron, FILE *file, bool i);

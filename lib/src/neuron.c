@@ -86,3 +86,57 @@ void free_neuron(neuron_t *neuron)
     free(neuron->input);
     free(neuron);
 }
+
+
+void save_neuron(neuron_t *neuron, FILE *file)
+{
+    if (file == NULL)
+    {
+        return;
+    }
+
+    fwrite(&neuron->input_len, sizeof(neuron->input_len), 1, file);
+    fwrite(&neuron->bias, sizeof(neuron->bias), 1, file);
+    fwrite(&neuron->output, sizeof(neuron->output), 1, file);
+    fwrite(&neuron->delta, sizeof(neuron->delta), 1, file);
+    
+
+    fwrite(neuron->input, sizeof(*neuron->input), neuron->input_len, file);
+
+    if (neuron->weight != NULL)
+    {
+      fwrite(neuron->weight, sizeof(*neuron->weight), neuron->input_len, file);
+
+    }
+    
+}
+
+void load_neuron(neuron_t *neuron, FILE *file, bool i)
+{
+    if (file == NULL)
+    {
+        return;
+    }
+
+    fread(&neuron->input_len, sizeof(size_t), 1, file);
+    printf("neuron->input_len %zu\n", neuron->input_len);
+    fread(&neuron->bias, sizeof(double), 1, file);
+    printf("neuron->bias %f\n", neuron->bias);
+    fread(&neuron->output, sizeof(double), 1, file);
+    printf("neuron->output %f\n", neuron->output);
+    fread(&neuron->delta, sizeof(double), 1, file);
+    printf("neuron->delta %f\n", neuron->delta);
+
+    neuron->input = malloc(sizeof(double) * neuron->input_len);
+    fread(neuron->input, sizeof(*neuron->input), neuron->input_len, file);
+    printf("neuron->input[0] %f\n", neuron->input[0]);
+
+
+    if (i != 1)
+    {
+        neuron->weight = malloc(sizeof(*neuron->weight) * neuron->input_len);
+        fread(neuron->weight, sizeof(*neuron->weight), neuron->input_len, file);
+        printf("neuron->weight[0] %f\n", neuron->weight[0]);
+    }
+
+}

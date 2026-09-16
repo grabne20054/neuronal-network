@@ -11,8 +11,11 @@ network.o: lib/src/network.c lib/include/neuron.h
 layer.o: lib/src/layer.c lib/include/layer.h
 	$(CC) $(CFLAGS) -c lib/src/layer.c -o build/layer.o
 
-build: neuron.o network.o layer.o
-	$(CC) $(CFLAGS) lib/src/main.c build/neuron.o build/network.o build/layer.o -o build/main.o $(LDFLAGS)
+preprocessing.o: lib/src/preprocessing.c lib/include/preprocessing.h
+	$(CC) $(CFLAGS) -c lib/src/preprocessing.c -o build/preprocessing.o
+
+build: neuron.o network.o layer.o preprocessing.o
+	$(CC) $(CFLAGS) lib/src/main.c build/neuron.o build/network.o build/layer.o build/preprocessing.o -o build/main.o $(LDFLAGS)
 
 clean:
 	rm -r ./build/*

@@ -1,5 +1,6 @@
 #include "../include/neuron.h"
 #include "../include/network.h"
+#include "../include/preprocessing.h"
 
 #include "data.c"
 
@@ -44,7 +45,8 @@ int main(int argc, char *argv[])
     if (args.train)
     {
         network_t *network = init_network(args.n_hidden_layers, samples, sample_len, features_per_sample, args.epochs, args.learning_rate, y);
-
+        normalize(network);
+        // todo save median iqr into network since prediction values should be normalized too
         time_t start_time = time(NULL);
         train_network(network);
         time_t end_time = time(NULL);

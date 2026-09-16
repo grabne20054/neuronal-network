@@ -41,7 +41,7 @@ All notable changes to this project will be documented in this file.
 ### Added
 * Command-line argument parsing for hidden layers, epochs, learning rate, and filename.
 
-### [1.0.2] - 2026-09-14
+## [1.0.2] - 2026-09-14
 
 ### Changed
 * Updated prediction array to hold double values instead of integers.

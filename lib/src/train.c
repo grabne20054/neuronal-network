@@ -2,7 +2,7 @@
 #include "../include/network.h"
 #include "../include/preprocessing.h"
 
-#include "data.c"
+#include "testdata/dataset0.h"
 
 #include <time.h>
 

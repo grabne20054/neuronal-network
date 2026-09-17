@@ -20,7 +20,6 @@ void normalize(network_t *network)
         
         get_medians_and_iqrs(sample_arr, network->samples_len, data, j); 
 
-        printf("median[%zu]: %f iqr[%zu]: %f\n", j, data->medians[j], j, data->iqr[j]);
         j++;
     }
 
@@ -45,8 +44,9 @@ void normalize(network_t *network)
         }
 
     }
-    
-    
+
+    memccpy(network->medians, data->medians, sizeof(double), network->features_per_sample * sizeof(double));
+    memccpy(network->iqrs, data->iqr, sizeof(double), network->features_per_sample * sizeof(double));
 
     free(data->medians);
     free(data->iqr);
@@ -105,4 +105,28 @@ void get_medians_and_iqrs(double *samples, size_t samples_len, preprocessing_t *
     }
 
     data->iqr[j] = q3 - q1;
+}
+
+void normalize_prediction_sample(network_t *network, double *prediction_sample)
+{
+    if (network->medians == NULL || network->iqrs == NULL)
+    {
+        perror("Normalization parameters not set. Please normalize the training data first.");
+        return;
+    }
+    
+
+    for (size_t j = 0; j < network->features_per_sample; j++)
+    {
+        if (network->iqrs[j] != 0.0)
+        {
+            prediction_sample[j] =
+                (prediction_sample[j] - network->medians[j])
+                / network->iqrs[j];
+        }
+        else
+        {
+            prediction_sample[j] = 0.0;
+        }
+    }
 }

@@ -24,6 +24,10 @@ typedef struct
 
     size_t features_per_sample;
 
+    // normalization parameters
+    double *medians;
+    double *iqrs;
+
 } network_t;
 
 

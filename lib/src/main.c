@@ -2,9 +2,11 @@
 #include "../include/network.h"
 #include "../include/preprocessing.h"
 
-#include "data.c"
+#include "../src/testdata/dataset1.h"
 
 #include <time.h>
+
+// TODO: make two programs, one for training and one for prediction
 
 typedef struct
 {
@@ -53,8 +55,6 @@ int main(int argc, char *argv[])
 
         printf("RAN for %f minutes\n", difftime(end_time, start_time)/60);
 
-
-        // save trained network
         filename = save_network(network);
         free_network(network);
     }
@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
     }
 
     double output = predict(loaded_network, prediction);
-    printf("Prediction for sample [1.0, 0.0, 0.0]: %f\n", output);
+    printf("Prediction for sample [50, 20, 30]: %f\n", output);
 
 }
 

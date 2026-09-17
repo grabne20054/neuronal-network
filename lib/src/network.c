@@ -230,7 +230,7 @@ char *save_network(network_t *network)
         mkdir("networks", 0700);
     }
 
-    char *path = "networks/network-";
+    char *path = "networks/network-"; // todo path adjustment based on calling
 
     char date_buff[70];
 

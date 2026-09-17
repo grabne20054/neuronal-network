@@ -14,12 +14,22 @@ layer.o: lib/src/layer.c lib/include/layer.h
 preprocessing.o: lib/src/preprocessing.c lib/include/preprocessing.h
 	$(CC) $(CFLAGS) -c lib/src/preprocessing.c -o build/preprocessing.o
 
-build: neuron.o network.o layer.o preprocessing.o
-	$(CC) $(CFLAGS) lib/src/main.c build/neuron.o build/network.o build/layer.o build/preprocessing.o -o build/main.o $(LDFLAGS)
+build_train: neuron.o network.o layer.o preprocessing.o
+	$(CC) $(CFLAGS) lib/src/train.c build/neuron.o build/network.o build/layer.o build/preprocessing.o -o build/nn-train $(LDFLAGS)
+
+
+build_predict: neuron.o network.o layer.o preprocessing.o
+	$(CC) $(CFLAGS) lib/src/predict.c build/neuron.o build/network.o build/layer.o build/preprocessing.o -o build/nn-predict $(LDFLAGS)
+
+build: build_train build_predict
 
 clean:
 	rm -r ./build/*
+	rm -r ./networks/*
 
-run: build build/main.o
-	build/main.o $(hlayers) $(e) $(lr) $(train) $(f)
+train: build_train build/nn-train
+	build/nn-train $(hlayers) $(e) $(lr) $(train) $(f)
+
+predict: build_predict build/nn-predict
+	build/nn-predict $(f)
 	

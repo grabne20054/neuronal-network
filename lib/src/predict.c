@@ -2,8 +2,6 @@
 #include "../include/network.h"
 #include "../include/preprocessing.h"
 
-#include "data.c"
-
 #include <time.h>
 
 typedef struct
@@ -42,7 +40,7 @@ int main(int argc, char *argv[])
     }
     
 
-    double output = predict(loaded_network, prediction); // always returning same value
+    double output = predict(loaded_network, args.prediction_sample);
     printf("Prediction: %f\n", output);
     
 }

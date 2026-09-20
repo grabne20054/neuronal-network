@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## [1.0] - 2026-09-10
+## 2026-09-10
 
 ### Added
 
@@ -49,3 +49,5 @@ All notable changes to this project will be documented in this file.
 
 ### Added
 * Added functionality to save and load the trained network to/from a file.
+
+

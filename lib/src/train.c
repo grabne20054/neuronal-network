@@ -12,7 +12,7 @@ typedef struct
     size_t epochs;
     double learning_rate;
 
-    //todo: add features and targets?
+    //todo: add features?
 } cliargs_t;
 
 void handle_args(int argc, char *argv[], cliargs_t *args);
@@ -24,8 +24,8 @@ int main(int argc, char *argv[])
     handle_args(argc, argv, &args);
 
     // INPUT LAYER 0 weights
-    size_t sample_len = 100;
-    size_t features_per_sample = 3;
+    size_t sample_len = sizeof(X) / sizeof(X[0]);
+    size_t features_per_sample = sizeof(X[0]) / sizeof(X[0][0]);
 
     double **samples = malloc(sample_len * sizeof(*samples));
 
@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
 
     network_t *network = init_network(args.n_hidden_layers, samples, sample_len, features_per_sample, args.epochs, args.learning_rate, y);
     normalize(network);
-    // todo save median iqr into network since prediction values should be normalized too
+    
     time_t start_time = time(NULL);
     train_network(network);
     time_t end_time = time(NULL);

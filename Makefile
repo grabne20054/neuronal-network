@@ -25,6 +25,8 @@ build: build_train build_predict
 
 clean:
 	rm -r ./build/*
+
+nw_clean:
 	rm -r ./networks/*
 
 train: build_train build/nn-train

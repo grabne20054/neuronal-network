@@ -280,8 +280,6 @@ char *save_network(network_t *network)
     }
 
     // save normalization parameters
-    printf("medians: %f %f %f\n", network->medians[0], network->medians[1], network->medians[2]);
-    printf("iqrs: %f %f %f\n", network->iqrs[0], network->iqrs[1], network->iqrs[2]);
     fwrite(network->medians, sizeof(*network->medians), network->features_per_sample, file);
     fwrite(network->iqrs, sizeof(*network->iqrs), network->features_per_sample, file);
 

@@ -21,6 +21,7 @@ build_train: neuron.o network.o layer.o preprocessing.o
 build_predict: neuron.o network.o layer.o preprocessing.o
 	$(CC) $(CFLAGS) lib/src/predict.c build/neuron.o build/network.o build/layer.o build/preprocessing.o -o build/nn-predict $(LDFLAGS)
 
+
 build: build_train build_predict
 
 clean:
@@ -34,4 +35,3 @@ train: build_train build/nn-train
 
 predict: build_predict build/nn-predict
 	build/nn-predict $(f)
-	

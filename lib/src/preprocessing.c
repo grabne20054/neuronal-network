@@ -28,8 +28,6 @@ void normalize(network_t *network)
     {
         for (size_t j = 0; j < network->features_per_sample; j++)
         {
-            printf("x: %f\n", network->samples[i][j]); 
-
             if (data->iqr[j] != 0.0)
             {
                 network->samples[i][j] =
@@ -40,7 +38,6 @@ void normalize(network_t *network)
             {
                 network->samples[i][j] = 0.0;
             }
-            printf("x_scaled: %f\n", network->samples[i][j]); 
         }
 
     }
@@ -71,19 +68,17 @@ void get_medians_and_iqrs(double *samples, size_t samples_len, preprocessing_t *
 
     qsort(samples, samples_len, sizeof *samples, compare);
 
-    /* Median */
+    // Median
     if (samples_len % 2 == 0)
     {
-        data->medians[j] =
-            (samples[samples_len / 2 - 1] +
-             samples[samples_len / 2]) / 2.0;
+        data->medians[j] = (samples[samples_len / 2 - 1] + samples[samples_len / 2]) / 2.0;
     }
     else
     {
         data->medians[j] = samples[samples_len / 2];
     }
 
-    /* Q1 and Q3 */
+    // Q1 and Q3
     size_t mid = samples_len / 2;
 
     double q1;
@@ -91,11 +86,9 @@ void get_medians_and_iqrs(double *samples, size_t samples_len, preprocessing_t *
 
     if (samples_len % 2 == 0)
     {
-        q1 = (samples[mid / 2 - 1] +
-              samples[mid / 2]) / 2.0;
+        q1 = (samples[mid / 2 - 1] + samples[mid / 2]) / 2.0;
 
-        q3 = (samples[mid + mid / 2 - 1] +
-              samples[mid + mid / 2]) / 2.0;
+        q3 = (samples[mid + mid / 2 - 1] + samples[mid + mid / 2]) / 2.0;
     }
     else
     {
@@ -121,8 +114,7 @@ void normalize_prediction_sample(network_t *network, double *prediction_sample)
         if (network->iqrs[j] != 0.0)
         {
             prediction_sample[j] =
-                (prediction_sample[j] - network->medians[j])
-                / network->iqrs[j];
+                (prediction_sample[j] - network->medians[j]) / network->iqrs[j];
         }
         else
         {

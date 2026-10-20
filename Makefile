@@ -14,8 +14,11 @@ layer.o: lib/src/layer.c lib/include/layer.h
 preprocessing.o: lib/src/preprocessing.c lib/include/preprocessing.h
 	$(CC) $(CFLAGS) -c lib/src/preprocessing.c -o build/preprocessing.o
 
-build_train: neuron.o network.o layer.o preprocessing.o
-	$(CC) $(CFLAGS) lib/src/train.c build/neuron.o build/network.o build/layer.o build/preprocessing.o -o build/nn-train $(LDFLAGS)
+parse_input.o: lib/src/parse_input.c lib/include/parse_input.h
+	$(CC) $(CFLAGS) -c lib/src/parse_input.c -o build/parse_input.o
+
+build_train: neuron.o network.o layer.o preprocessing.o parse_input.o
+	$(CC) $(CFLAGS) lib/src/train.c build/neuron.o build/network.o build/layer.o build/preprocessing.o build/parse_input.o -o build/nn-train $(LDFLAGS)
 
 
 build_predict: neuron.o network.o layer.o preprocessing.o

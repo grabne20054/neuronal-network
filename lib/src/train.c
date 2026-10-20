@@ -1,8 +1,7 @@
 #include "../include/neuron.h"
 #include "../include/network.h"
 #include "../include/preprocessing.h"
-
-#include "testdata/dataset0.h"
+#include "../include/parse_input.h"
 
 #include <time.h>
 
@@ -23,6 +22,7 @@ int main(int argc, char *argv[])
     cliargs_t args;
     handle_args(argc, argv, &args);
 
+    double ** = load_input("../lib/src/testdata/test.csv");
     // INPUT LAYER 0 weights
     size_t sample_len = sizeof(X) / sizeof(X[0]);
     size_t features_per_sample = sizeof(X[0]) / sizeof(X[0][0]);

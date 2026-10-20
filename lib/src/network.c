@@ -1,6 +1,5 @@
 #include "../include/network.h"
 #include "../include/neuron.h"
-#include "../include/preprocessing.h"
 
 void feed_forward(network_t *network, double *sample)
 {
@@ -140,9 +139,6 @@ network_t *init_network(size_t hidden_layers, double **samples, size_t sample_le
     network->samples = samples;
     network->features_per_sample = features_per_sample;
 
-    network->medians = malloc(sizeof(double) * network->features_per_sample);
-    network->iqrs = malloc(sizeof(double) * network->features_per_sample);
-
     //io layers init
     layer_t *i_layer = init_layer(features_per_sample);
     i_layer->i = true;
@@ -268,22 +264,17 @@ char *save_network(network_t *network)
     }
 
     // save params
-    fwrite(&network->epoch, sizeof(network->epoch), 1, file);
-    fwrite(&network->learning_rate, sizeof(network->learning_rate), 1, file);
+    fwrite(&network->epoch, sizeof(network->epoch), 1, file); //
+    fwrite(&network->learning_rate, sizeof(network->learning_rate), 1, file); //
 
     // save samples, targets
+
     fwrite(network->targets, sizeof(*network->targets), network->samples_len, file);
 
     for (size_t i = 0; i < network->samples_len; i++)
     {
         fwrite(network->samples[i], sizeof(*network->samples[i]), network->features_per_sample, file);
     }
-
-    // save normalization parameters
-    fwrite(network->medians, sizeof(*network->medians), network->features_per_sample, file);
-    fwrite(network->iqrs, sizeof(*network->iqrs), network->features_per_sample, file);
-
-
     fclose(file);
 
     printf("%s saved successfully!\n", con);
@@ -334,24 +325,14 @@ network_t *load_network(const char *filename)
     fread(network->targets, sizeof(*network->targets), network->samples_len, file);
     printf("network->targets %d\n", network->targets[5]);
 
-    
     network->samples = malloc(sizeof(*network->samples) * network->samples_len);
     for (size_t i = 0; i < network->samples_len; i++)
     {
         network->samples[i] = malloc(sizeof(double) * network->features_per_sample);
         fread(network->samples[i], sizeof(*network->samples[i]), network->features_per_sample, file);
 
-        //printf("network->samples[i][0]: %f\n", network->samples[i][0]);
+        printf("network->samples[i][0]: %f\n", network->samples[i][0]);
     }
-
-    network->medians = malloc(sizeof(double) * network->features_per_sample);
-    fread(network->medians, sizeof(*network->medians), network->features_per_sample, file);
-    printf("network->medians[0] %f\n", network->medians[0]);
-
-    network->iqrs = malloc(sizeof(double) * network->features_per_sample);
-    fread(network->iqrs, sizeof(*network->iqrs), network->features_per_sample, file);
-    printf("network->iqrs[0] %f\n", network->iqrs[0]);
-
 
     fclose(file);
 
@@ -363,8 +344,6 @@ network_t *load_network(const char *filename)
 
 int predict(network_t *network, double *sample)
 {
-    normalize_prediction_sample(network, sample);
-    printf("Normalized prediction sample: %f %f %f\n", sample[0], sample[1], sample[2]);
     feed_forward(network, sample);
     double output = network->layers[network->layers_length-1]->neurons_list[0]->output;
 

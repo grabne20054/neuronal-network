@@ -22,19 +22,24 @@ int main(int argc, char *argv[])
     cliargs_t args;
     handle_args(argc, argv, &args);
 
-    double ** = load_input("../lib/src/testdata/test.csv");
+    parse_result_t result = load_input("lib/src/testdata/test.csv");
     // INPUT LAYER 0 weights
-    size_t sample_len = sizeof(X) / sizeof(X[0]);
-    size_t features_per_sample = sizeof(X[0]) / sizeof(X[0][0]);
+    size_t sample_len = result.sample_len;
+    size_t features_per_sample = result.features_per_sample;
 
     double **samples = malloc(sample_len * sizeof(*samples));
+    int *y = malloc(sample_len);
 
     for (size_t i = 0; i < sample_len; i++) {
         samples[i] = malloc(features_per_sample * sizeof(*samples[i]));
 
         for (size_t j = 0; j < features_per_sample; j++) {
-            samples[i][j] = X[i][j];
+            samples[i][j] = result.X[i][j];
+            printf("sample[%zu][%zu]: %f", i, j, result.X[i][j]);
         }
+
+        y[i] = samples[i][features_per_sample];
+        printf("i:%zu hallo: %d\n", i, y[i]);
     }
 
     network_t *network = init_network(args.n_hidden_layers, samples, sample_len, features_per_sample, args.epochs, args.learning_rate, y);
